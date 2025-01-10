@@ -34,29 +34,29 @@ CREATE TABLE Tag (
     name VARCHAR(255) NOT NULL
 );
 
----- Tabla Post
---CREATE TABLE Post (
---    id BIGSERIAL PRIMARY KEY,
---    title VARCHAR(255) NOT NULL,
---    content TEXT,
---    image_url VARCHAR(255),
---    created_at TIMESTAMP,
---    updated_at TIMESTAMP,
---    author_id BIGINT,
---    category_id BIGINT,
---    CONSTRAINT fk_post_user FOREIGN KEY (author_id) REFERENCES Users (id),
---    CONSTRAINT fk_post_category FOREIGN KEY (category_id) REFERENCES Category (id)
---);
---
----- Tabla Post_Tags (para relación Many-to-Many entre Post y Tag)
---CREATE TABLE Post_Tags (
---    post_id BIGINT NOT NULL,
---    tag_id BIGINT NOT NULL,
---    PRIMARY KEY (post_id, tag_id),
---    CONSTRAINT fk_post_tags_post FOREIGN KEY (post_id) REFERENCES Post (id),
---    CONSTRAINT fk_post_tags_tag FOREIGN KEY (tag_id) REFERENCES Tag (id)
---);
---
+-- Tabla Post
+CREATE TABLE Post (
+    id BIGSERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    content TEXT,
+    image_url VARCHAR(255),
+    created_at TIMESTAMP,
+    updated_at TIMESTAMP,
+    author_id BIGINT,
+    category_id BIGINT,
+    CONSTRAINT fk_post_user FOREIGN KEY (author_id) REFERENCES Users (id),
+    CONSTRAINT fk_post_category FOREIGN KEY (category_id) REFERENCES Category (id)
+);
+
+-- Tabla Post_Tags (para relación Many-to-Many entre Post y Tag)
+CREATE TABLE post_tags (
+    post_id BIGINT NOT NULL,
+    tag_id BIGINT NOT NULL,
+    PRIMARY KEY (post_id, tag_id),
+    FOREIGN KEY (post_id) REFERENCES post(id),
+    FOREIGN KEY (tag_id) REFERENCES tag(id)
+);
+
 ---- Tabla Comment
 --CREATE TABLE Comment (
 --    id BIGSERIAL PRIMARY KEY,
