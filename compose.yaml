@@ -1,0 +1,9 @@
+services:
+  postgres:
+    image: 'postgres:latest'
+    environment:
+      - 'POSTGRES_DB=blogDB'
+      - 'POSTGRES_PASSWORD=qwGa3PArSd435'
+      - 'POSTGRES_USER=userblogDB'
+    ports:
+      - '5432:5432'
