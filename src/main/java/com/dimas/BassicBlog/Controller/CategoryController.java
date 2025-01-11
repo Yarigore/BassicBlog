@@ -63,9 +63,9 @@ public class CategoryController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Category> deleteCategory(@PathVariable Long id) {
-        return categoryService.deleteCategory(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        boolean isDeleted = categoryService.deleteCategory(id);
+        if (isDeleted) return ResponseEntity.noContent().build();
+        else return ResponseEntity.notFound().build();
     }
 
 }

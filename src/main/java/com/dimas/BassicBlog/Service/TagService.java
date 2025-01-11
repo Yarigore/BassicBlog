@@ -26,10 +26,12 @@ public class TagService {
         return Optional.of(tagRepository.save(tag));
     }
 
-    public Optional<Tag> deleteTag(Long id){
-        Optional<Tag> deleteTag = tagRepository.findById(id);
-        tagRepository.deleteById(id);
-        return deleteTag;
+    public Boolean deleteTag(Long id){
+        if (tagRepository.existsById(id)){
+            tagRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 
 }

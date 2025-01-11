@@ -60,9 +60,9 @@ public class TagController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Tag> deleteTag(@PathVariable Long id){
-        return tagService.deleteTag(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        boolean isDeleted = tagService.deleteTag(id);
+        if (isDeleted) return ResponseEntity.noContent().build();
+        else return ResponseEntity.notFound().build();
     }
 
 }

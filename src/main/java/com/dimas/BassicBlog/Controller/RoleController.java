@@ -39,7 +39,7 @@ public class RoleController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<Role> updateRole(@PathVariable Long id, @RequestBody Role role) {
-        Optional<Role> roleToChange = roleService.findRoleById(id);
+        Optional<Role> roleToChange = roleService.getRolebyId(id);
 
         if (roleToChange.isPresent()) {
             Role existingRole = roleToChange.get();
@@ -59,9 +59,9 @@ public class RoleController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Role> deleteRole(@PathVariable Long id) {
-        return roleService.deleteRole(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        boolean isDeleted = roleService.deleteRole(id);
+        if (isDeleted) return ResponseEntity.noContent().build();
+        else return ResponseEntity.notFound().build();
     }
 
 }

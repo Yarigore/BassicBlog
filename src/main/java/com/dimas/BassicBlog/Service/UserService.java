@@ -26,10 +26,12 @@ public class UserService {
         return Optional.of(userRepository.save(user));
     }
 
-    public Optional<Users> deleteUser(Long id) {
-        Optional<Users> deleteUser = userRepository.findById(id);
-        userRepository.deleteById(id);
-        return deleteUser;
+    public boolean deleteUser(Long id) {
+        if (userRepository.existsById(id)){
+            userRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 
 }

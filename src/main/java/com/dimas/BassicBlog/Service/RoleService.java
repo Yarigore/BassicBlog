@@ -26,14 +26,12 @@ public class RoleService {
         return Optional.of(roleRepository.save(role));
     }
 
-    public Optional<Role> deleteRole(Long id) {
-        Optional<Role> deleteRole = roleRepository.findById(id);
-        roleRepository.deleteById(id);
-        return deleteRole;
-    }
-
-    public Optional<Role> findRoleById(Long id) {
-        return roleRepository.findById(id);
+    public boolean deleteRole(Long id) {
+        if (roleRepository.existsById(id)){
+            roleRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 
 }
