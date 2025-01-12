@@ -26,10 +26,12 @@ public class CategoryService {
         return Optional.of(categoryRepository.save(category));
     }
 
-    public Optional<Category> deleteCategory(Long id) {
-        Optional<Category> categoryErase = categoryRepository.findById(id);
-        categoryRepository.deleteById(id);
-        return categoryErase;
+    public boolean deleteCategory(Long id) {
+        if (categoryRepository.existsById(id)){
+            categoryRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 
 }
