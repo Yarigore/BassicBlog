@@ -57,13 +57,14 @@ CREATE TABLE post_tags (
     FOREIGN KEY (tag_id) REFERENCES tag(id)
 );
 
----- Tabla Comment
---CREATE TABLE Comment (
---    id BIGSERIAL PRIMARY KEY,
---    content TEXT NOT NULL,
---    created_at TIMESTAMP,
---    user_id BIGINT,
---    post_id BIGINT,
---    CONSTRAINT fk_comment_user FOREIGN KEY (user_id) REFERENCES Users (id),
---    CONSTRAINT fk_comment_post FOREIGN KEY (post_id) REFERENCES Post (id)
---);
+-- Tabla Comment
+CREATE TABLE Comment (
+    id BIGSERIAL PRIMARY KEY,
+    content TEXT NOT NULL,
+    created_at TIMESTAMP,
+    updated_at TIMESTAMP,
+    user_id BIGINT,
+    post_id BIGINT,
+    CONSTRAINT fk_comment_user FOREIGN KEY (user_id) REFERENCES Users (id),
+    CONSTRAINT fk_comment_post FOREIGN KEY (post_id) REFERENCES Post (id)
+);

@@ -1,41 +1,38 @@
 package com.dimas.BassicBlog.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
-public class Post {
+public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String title;
+
+    @NotNull
     private String content;
-    private String imageUrl;
+
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
     @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private Users author;
 
     @ManyToOne
-    private Category category;
-
-    @ManyToMany
-    @JoinTable(
-            name = "post_tags", // Nombre de la tabla intermedia
-            joinColumns = @JoinColumn(name = "post_id"), // Clave foránea hacia `Post`
-            inverseJoinColumns = @JoinColumn(name = "tag_id") // Clave foránea hacia `Tag`
-    )
-    private List<Tag> tags = new ArrayList<>();
-
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    private List<Comment> comments = new ArrayList<>();
+    @JsonIgnore
+    @JoinColumn(name = "post_id", referencedColumnName = "id")
+    private Post post;
 
     @PrePersist
     protected void onCreate() {
@@ -47,4 +44,5 @@ public class Post {
     protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
+
 }

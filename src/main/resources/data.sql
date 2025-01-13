@@ -28,8 +28,8 @@ INSERT INTO post_tags (post_id, tag_id) VALUES (1, 2);
 INSERT INTO post_tags (post_id, tag_id) VALUES (2, 3);
 
 ---- Inserción de comentarios
---INSERT INTO comment (id, content, created_at, user_id, post_id)
---VALUES (1, 'Great post about Spring Boot!', NOW(), 2, 1);
---
---INSERT INTO comment (id, content, created_at, user_id, post_id)
---VALUES (2, 'Looking forward to learning Docker.', NOW(), 1, 2);
+INSERT INTO Comment (content, created_at, updated_at, user_id, post_id) VALUES
+('Great article on Java!', NOW(), NOW(), 2, 1),
+('Thanks for the tips. Very helpful!', NOW(), NOW(), 1, 2),
+('I love programming with Java!', NOW(), NOW(), 1, 1),
+('Can you post more about fitness?', NOW(), NOW(), 2, 2);
