@@ -31,7 +31,7 @@ public class Comment {
 
     @ManyToOne
     @JsonIgnore
-    @JoinColumn(name = "post_id", referencedColumnName = "id")
+    @JoinColumn(name = "post_id", nullable = false)
     private Post post;
 
     @PrePersist

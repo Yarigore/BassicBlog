@@ -3,6 +3,7 @@ package com.dimas.BassicBlog.Controller;
 import com.dimas.BassicBlog.Entity.*;
 import com.dimas.BassicBlog.Service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -57,33 +58,48 @@ public class PostController {
                 .orElse(ResponseEntity.badRequest().build());
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<Post> updatePost(@PathVariable Long id,
-                                           @RequestParam(value = "file", required = false) MultipartFile file,
-                                           @RequestBody Post post) {
+    @PatchMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Post> updatePost(
+            @PathVariable Long id,
+            @RequestParam(value = "file", required = false) MultipartFile file,
+            @RequestParam(value = "title", required = false) String title,
+            @RequestParam(value = "content", required = false) String content,
+            @RequestParam(value = "authorId", required = false) Long authorId,
+            @RequestParam(value = "categoryId", required = false) Long categoryId,
+            @RequestParam(value = "tagIds", required = false) List<Long> tagIds) {
 
         Optional<Post> postToChange = postService.getPostById(id);
 
         if (postToChange.isPresent()) {
-            Post existingRole = postToChange.get();
-            if (post.getTitle() != null) {
-                existingRole.setTitle(post.getTitle());
+            Post existingPost = postToChange.get();
+
+            if (title != null) existingPost.setTitle(title);
+            if (content != null) existingPost.setContent(content);
+
+            if (authorId != null) {
+                userService.getUserById(authorId).ifPresent(existingPost::setAuthor);
             }
-            if (post.getContent() != null) {
-                existingRole.setContent(post.getContent());
+            if (categoryId != null) {
+                categoryService.getCategoryById(categoryId).ifPresent(existingPost::setCategory);
             }
-            if (post.getAuthor() != null) {
-                existingRole.setAuthor(post.getAuthor());
+            if (tagIds != null) {
+                List<Tag> tags = tagService.getTagsByIds(tagIds);
+                existingPost.setTags(tags);
             }
-            if (post.getCategory() != null) {
-                existingRole.setCategory(post.getCategory());
+
+            try {
+                if (file != null && !file.isEmpty()) {
+                    String imageUrl = postService.uploadImage(file);
+                    existingPost.setImageUrl(imageUrl);
+                }
+            } catch (Exception e) {
+                System.err.println("Error al subir la imagen: " + e.getMessage());
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
             }
-            if (post.getTags() != null) {
-                existingRole.setTags(post.getTags());
-            }
-            return ResponseEntity.ok(postService.savePost(existingRole));
+
+            return ResponseEntity.ok(postService.savePost(existingPost));
         }
-        // Si no se encuentra el Post
+
         return ResponseEntity.notFound().build();
     }
 

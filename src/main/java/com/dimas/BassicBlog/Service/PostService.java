@@ -7,6 +7,7 @@ import com.dimas.BassicBlog.Repository.TagRepository;
 import com.dimas.BassicBlog.Repository.UserRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,29 +20,25 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class PostService {
 
-    @Autowired
     private PostRepository postRepository;
 
-    @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
-    @Autowired
-    CategoryRepository categoryRepository;
+    private CategoryRepository categoryRepository;
 
-    @Autowired
-    TagRepository tagRepository;
+    private TagRepository tagRepository;
 
-    @Autowired
     private ImgbbService imgbbService;
+
+    public Optional<Post> getPostById(Long id) {
+        return postRepository.findById(id);
+    }
 
     public Optional<List<Post>> getPosts() {
         return Optional.of(postRepository.findAll());
-    }
-
-    public Optional<Post> getPostById(Long id){
-        return postRepository.findById(id);
     }
 
     public Optional<Post> savePost(MultipartFile file, String title, String content,
@@ -50,32 +47,17 @@ public class PostService {
         post.setTitle(title);
         post.setContent(content);
 
-        LocalDateTime now = LocalDateTime.now();
-        post.setCreatedAt(now);
-        post.setUpdatedAt(now);
-
-        // Relación con el autor
         post.setAuthor(userRepository.findById(authorId)
                 .orElseThrow(() -> new RuntimeException("Author not found")));
 
-        // Relación con la categoría
         post.setCategory(categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new RuntimeException("Category not found")));
 
-        // Relación con etiquetas
         post.setTags(tagRepository.findAllById(tagIds));
 
-        // Procesar el archivo para obtener la URL de la imagen
-        if (!file.isEmpty()) {
-            String base64Image = Base64.getEncoder().encodeToString(file.getBytes());
-            String response = imgbbService.uploadImage(base64Image);
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode jsonNode = objectMapper.readTree(response);
-            post.setImageUrl(jsonNode.get("data").get("url").asText());
+        if (file != null && !file.isEmpty()) {
+            post.setImageUrl(uploadImage(file));
         }
-
-        // Asegurarse de que los comentarios estén vacíos
-//        post.setComments(Collections.emptyList());
 
         return Optional.of(postRepository.save(post));
     }
@@ -85,6 +67,14 @@ public class PostService {
         return postRepository.save(post);
     }
 
+    public String uploadImage(MultipartFile file) throws IOException {
+        String base64Image = Base64.getEncoder().encodeToString(file.getBytes());
+        String response = imgbbService.uploadImage(base64Image);
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode jsonNode = objectMapper.readTree(response);
+        return jsonNode.get("data").get("url").asText();
+    }
+
     public boolean deletePost(Long id) {
         if (postRepository.existsById(id)) {
             postRepository.deleteById(id);
@@ -92,5 +82,4 @@ public class PostService {
         }
         return false;
     }
-
 }

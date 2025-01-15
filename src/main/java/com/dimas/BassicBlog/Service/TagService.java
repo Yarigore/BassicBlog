@@ -18,6 +18,10 @@ public class TagService {
         return tagRepository.findById(id);
     }
 
+    public List<Tag> getTagsByIds(List<Long> tagIds) {
+        return tagRepository.findAllById(tagIds);
+    }
+
     public Optional<List<Tag>> getTags(){
         return Optional.of(tagRepository.findAll());
     }

@@ -5,6 +5,7 @@ import com.dimas.BassicBlog.Service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,8 +32,12 @@ public class CommentController {
     }
 
     @PostMapping
-    public ResponseEntity<Comment> createComment(@RequestBody Comment comment){
-        return commentService.saveComment(comment)
+    public ResponseEntity<Comment> createComment(
+            @RequestParam(value = "post ID") Long postId,
+            @RequestParam(value = "Author ID") Long authorId,
+            @RequestParam(value = "Comment") String comment
+    ){
+        return commentService.createComment(postId, authorId, comment)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.badRequest().build());
     }
