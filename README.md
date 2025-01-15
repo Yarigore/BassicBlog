@@ -1,6 +1,6 @@
 # BassicBlog
 
-BassicBlog es un sistema avanzado de gestión de blogs desarrollado con Java Spring Boot. Este proyecto incluye funcionalidades CRUD completas para publicaciones, categorías, etiquetas, usuarios y roles. Además, permite la subida de imágenes mediante la integración con Imgbb y utiliza una base de datos PostgreSQL en un contenedor Docker.
+BassicBlog es un sistema avanzado de gestión de blogs desarrollado con Java Spring Boot. Este proyecto incluye funcionalidades CRUD completas para publicaciones, categorías, etiquetas, usuarios, comentarios y roles. Además, permite la subida de imágenes mediante la integración con Imgbb y utiliza una base de datos PostgreSQL en un contenedor Docker.
 
 ## Funcionalidades principales
 
@@ -8,49 +8,59 @@ BassicBlog es un sistema avanzado de gestión de blogs desarrollado con Java Spr
 - **Gestión de categorías**: Organizar las publicaciones en categorías, con opciones para crear, listar, actualizar y eliminar categorías.
 - **Gestión de etiquetas**: Asignar etiquetas a las publicaciones para mejorar la búsqueda. Incluye funcionalidades para crear, listar, actualizar y eliminar etiquetas.
 - **Gestión de usuarios**: Crear, listar, actualizar y eliminar usuarios.
+- **Gestión de comentarios**: Añadir, listar, actualizar y eliminar comentarios en publicaciones.
 - **Gestión de roles**: Crear, modificar, eliminar y listar roles.
 - **Subida de imágenes**: Integración con Imgbb para el manejo de imágenes.
 
 ## Estructura de endpoints
 
-### Publicaciones (/post)
+### Publicaciones (/api/v1/post)
 
-- `GET /post`: Obtiene todas las publicaciones.
-- `POST /post`: Crea una publicación con imagen, título, contenido, autor, categoría y etiquetas.
-- `DELETE /post`: Elimina una publicación específica.
-- `POST /post/upload`: Sube una imagen a Imgbb y devuelve la URL.
+- `GET /api/v1/post`: Obtiene todas las publicaciones.
+- `GET /api/v1/post/{id}`: Obtiene una publicación por su ID.
+- `POST /api/v1/post`: Crea una publicación con imagen, título, contenido, autor, categoría y etiquetas.
+- `PATCH /api/v1/post/{id}`: Actualiza una publicación existente.
+- `DELETE /api/v1/post`: Elimina una publicación específica.
 
-### Categorías (/category)
+### Categorías (/api/v1/category)
 
-- `GET /category`: Obtiene todas las categorías.
-- `GET /category/{id}`: Obtiene una categoría por su ID.
-- `POST /category`: Crea una nueva categoría.
-- `PATCH /category/{id}`: Actualiza una categoría existente.
-- `DELETE /category`: Elimina una categoría específica.
+- `GET /api/v1/category`: Obtiene todas las categorías.
+- `GET /api/v1/category/{id}`: Obtiene una categoría por su ID.
+- `POST /api/v1/category`: Crea una nueva categoría.
+- `PATCH /api/v1/category/{id}`: Actualiza una categoría existente.
+- `DELETE /api/v1/category/{id}`: Elimina una categoría específica.
 
-### Etiquetas (/tag)
+### Etiquetas (/api/v1/tags)
 
-- `GET /tag`: Obtiene todas las etiquetas.
-- `GET /tag/{id}`: Obtiene una etiqueta por su ID.
-- `POST /tag`: Crea una nueva etiqueta.
-- `PATCH /tag/{id}`: Actualiza una etiqueta existente.
-- `DELETE /tag`: Elimina una etiqueta existente.
+- `GET /api/v1/tags`: Obtiene todas las etiquetas.
+- `GET /api/v1/tags/{id}`: Obtiene una etiqueta por su ID.
+- `POST /api/v1/tags`: Crea una nueva etiqueta.
+- `PATCH /api/v1/tags/{id}`: Actualiza una etiqueta existente.
+- `DELETE /api/v1/tags/{id}`: Elimina una etiqueta existente.
 
-### Usuarios (/user)
+### Usuarios (/api/v1/user)
 
-- `GET /user`: Obtiene todos los usuarios.
-- `GET /user/{id}`: Obtiene un usuario por su ID.
-- `POST /user`: Crea un nuevo usuario.
-- `PATCH /user/{id}`: Actualiza un usuario existente.
-- `DELETE /user`: Elimina un usuario específico.
+- `GET /api/v1/user`: Obtiene todos los usuarios.
+- `GET /api/v1/user/{id}`: Obtiene un usuario por su ID.
+- `POST /api/v1/user`: Crea un nuevo usuario.
+- `PATCH /api/v1/user/{id}`: Actualiza un usuario existente.
+- `DELETE /api/v1/user/{id}`: Elimina un usuario específico.
 
-### Roles (/role)
+### Comentarios (/api/v1/comment)
 
-- `GET /role`: Obtiene todos los roles.
-- `GET /role/{id}`: Obtiene un rol por su ID.
-- `POST /role/create`: Crea un nuevo rol.
-- `PATCH /role/{id}`: Actualiza un rol existente.
-- `DELETE /role`: Elimina un rol.
+- `GET /api/v1/comment`: Obtiene todos los comentarios.
+- `GET /api/v1/comment/{id}`: Obtiene un comentario por su ID.
+- `POST /api/v1/comment`: Crea un nuevo comentario.
+- `PATCH /api/v1/comment/{id}`: Actualiza un comentario existente.
+- `DELETE /api/v1/comment/{id}`: Elimina un comentario específico.
+
+### Roles (/api/v1/role)
+
+- `GET /api/v1/role`: Obtiene todos los roles.
+- `GET /api/v1/role/{id}`: Obtiene un rol por su ID.
+- `POST /api/v1/role`: Crea un nuevo rol.
+- `PATCH /api/v1/role/{id}`: Actualiza un rol existente.
+- `DELETE /api/v1/role/{id}`: Elimina un rol.
 
 ## Configuración
 
@@ -139,6 +149,7 @@ El proyecto utiliza **Imgbb** para gestionar la subida de imágenes. El token de
 
 - Implementar autenticación y autorización con **Spring Security**.
 - Mejorar la validación y manejo de errores.
-- Agregar ejemplos de solicitudes y respuestas JSON en la documentación.
-
+- Implementar clases DTO para estructurar los datos transferidos entre cliente y servidor.
+- Añadir soporte para autenticación basada en JWT (JSON Web Tokens) para mejorar la seguridad.
+  
 ---
