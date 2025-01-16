@@ -14,28 +14,27 @@ public class TagService {
     @Autowired
     private TagRepository tagRepository;
 
-    public Optional<Tag> getTagById(Long id){
+    public Optional<Tag> getTagById(Long id) {
         return tagRepository.findById(id);
+    }
+
+    public List<Tag> getAllTags() {
+        return tagRepository.findAll();
     }
 
     public List<Tag> getTagsByIds(List<Long> tagIds) {
         return tagRepository.findAllById(tagIds);
     }
 
-    public Optional<List<Tag>> getTags(){
-        return Optional.of(tagRepository.findAll());
-    }
-
-    public Optional<Tag> saveTag(Tag tag){
+    public Optional<Tag> saveTag(Tag tag) {
         return Optional.of(tagRepository.save(tag));
     }
 
-    public Boolean deleteTag(Long id){
-        if (tagRepository.existsById(id)){
+    public boolean deleteTag(Long id) {
+        if (tagRepository.existsById(id)) {
             tagRepository.deleteById(id);
             return true;
         }
         return false;
     }
-
 }

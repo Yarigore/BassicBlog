@@ -1,6 +1,9 @@
 package com.dimas.BassicBlog.Controller;
 
+import com.dimas.BassicBlog.DTO.Tag.TagRequestDTO;
+import com.dimas.BassicBlog.DTO.Tag.TagResponseDTO;
 import com.dimas.BassicBlog.Entity.Tag;
+import com.dimas.BassicBlog.Mapper.TagMapper;
 import com.dimas.BassicBlog.Service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -8,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/v1/tags")
@@ -16,41 +20,47 @@ public class TagController {
     @Autowired
     private TagService tagService;
 
+    @Autowired
+    private TagMapper tagMapper;
+
     @GetMapping
-    public ResponseEntity<List<Tag>> getTags() {
-        return tagService.getTags()
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<List<TagResponseDTO>> getAllTags() {
+        List<TagResponseDTO> tags = tagService.getAllTags().stream()
+                .map(tagMapper::toResponseDTO)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(tags);
     }
 
-    @GetMapping("{id}")
-    public ResponseEntity<Tag> getTagById(@PathVariable Long id){
+    @GetMapping("/{id}")
+    public ResponseEntity<TagResponseDTO> getTagById(@PathVariable Long id) {
         return tagService.getTagById(id)
+                .map(tagMapper::toResponseDTO)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<Tag> createTag(@RequestBody Tag tag){
+    public ResponseEntity<TagResponseDTO> createTag(@RequestBody TagRequestDTO tagRequestDTO) {
+        Tag tag = tagMapper.toEntity(tagRequestDTO);
         return tagService.saveTag(tag)
+                .map(tagMapper::toResponseDTO)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.badRequest().build());
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Tag> updateTag(@PathVariable Long id, @RequestBody Tag tag) {
-        Optional<Tag> tagToChange = tagService.getTagById(id);
+    public ResponseEntity<TagResponseDTO> updateTag(@PathVariable Long id, @RequestBody TagRequestDTO tagRequestDTO) {
+        Optional<Tag> tagToUpdate = tagService.getTagById(id);
 
-        if (tagToChange.isPresent()) {
-            Tag existingTag = tagToChange.get();
+        if (tagToUpdate.isPresent()) {
+            Tag existingTag = tagToUpdate.get();
 
-            if (tag.getName() != null) {
-                existingTag.setName(tag.getName());
+            if (tagRequestDTO.getName() != null) {
+                existingTag.setName(tagRequestDTO.getName());
             }
 
-            Optional<Tag> updatedTag = tagService.saveTag(existingTag);
-
-            return updatedTag
+            return tagService.saveTag(existingTag)
+                    .map(tagMapper::toResponseDTO)
                     .map(ResponseEntity::ok)
                     .orElse(ResponseEntity.status(500).build());
         }
@@ -59,10 +69,9 @@ public class TagController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Tag> deleteTag(@PathVariable Long id){
+    public ResponseEntity<Void> deleteTag(@PathVariable Long id) {
         boolean isDeleted = tagService.deleteTag(id);
         if (isDeleted) return ResponseEntity.noContent().build();
         else return ResponseEntity.notFound().build();
     }
-
 }
