@@ -1,4 +1,4 @@
-package com.dimas.BassicBlog.DTO.Tag;
+package com.dimas.BassicBlog.DTO.TagDTO;
 
 import lombok.Data;
 

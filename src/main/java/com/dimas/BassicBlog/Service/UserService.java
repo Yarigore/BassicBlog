@@ -18,8 +18,8 @@ public class UserService {
         return userRepository.findById(id);
     }
 
-    public Optional<List<Users>> getUsers() {
-        return Optional.of(userRepository.findAll());
+    public List<Users> getUsers() {
+        return userRepository.findAll();
     }
 
     public Optional<Users> saveUser(Users user) {

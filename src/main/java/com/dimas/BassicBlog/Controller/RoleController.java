@@ -1,7 +1,7 @@
 package com.dimas.BassicBlog.Controller;
 
-import com.dimas.BassicBlog.DTO.Role.RoleRequestDTO;
-import com.dimas.BassicBlog.DTO.Role.RoleResponseDTO;
+import com.dimas.BassicBlog.DTO.RoleDTO.RoleRequestDTO;
+import com.dimas.BassicBlog.DTO.RoleDTO.RoleResponseDTO;
 import com.dimas.BassicBlog.Entity.Role;
 import com.dimas.BassicBlog.Mapper.RoleMapper;
 import com.dimas.BassicBlog.Service.RoleService;

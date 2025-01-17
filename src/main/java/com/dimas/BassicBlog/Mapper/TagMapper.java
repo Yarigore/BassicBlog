@@ -1,7 +1,7 @@
 package com.dimas.BassicBlog.Mapper;
 
-import com.dimas.BassicBlog.DTO.Tag.TagRequestDTO;
-import com.dimas.BassicBlog.DTO.Tag.TagResponseDTO;
+import com.dimas.BassicBlog.DTO.TagDTO.TagRequestDTO;
+import com.dimas.BassicBlog.DTO.TagDTO.TagResponseDTO;
 import com.dimas.BassicBlog.Entity.Tag;
 import org.springframework.stereotype.Component;
 

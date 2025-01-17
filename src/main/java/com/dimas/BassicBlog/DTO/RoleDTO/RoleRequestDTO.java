@@ -1,4 +1,4 @@
-package com.dimas.BassicBlog.DTO.Role;
+package com.dimas.BassicBlog.DTO.RoleDTO;
 
 import lombok.Data;
 

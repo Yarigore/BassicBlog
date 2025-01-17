@@ -1,7 +1,7 @@
 package com.dimas.BassicBlog.Mapper;
 
-import com.dimas.BassicBlog.DTO.Role.RoleRequestDTO;
-import com.dimas.BassicBlog.DTO.Role.RoleResponseDTO;
+import com.dimas.BassicBlog.DTO.RoleDTO.RoleRequestDTO;
+import com.dimas.BassicBlog.DTO.RoleDTO.RoleResponseDTO;
 import com.dimas.BassicBlog.Entity.Role;
 import org.springframework.stereotype.Component;
 

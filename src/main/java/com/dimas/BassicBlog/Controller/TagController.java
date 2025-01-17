@@ -1,7 +1,7 @@
 package com.dimas.BassicBlog.Controller;
 
-import com.dimas.BassicBlog.DTO.Tag.TagRequestDTO;
-import com.dimas.BassicBlog.DTO.Tag.TagResponseDTO;
+import com.dimas.BassicBlog.DTO.TagDTO.TagRequestDTO;
+import com.dimas.BassicBlog.DTO.TagDTO.TagResponseDTO;
 import com.dimas.BassicBlog.Entity.Tag;
 import com.dimas.BassicBlog.Mapper.TagMapper;
 import com.dimas.BassicBlog.Service.TagService;
@@ -25,7 +25,8 @@ public class TagController {
 
     @GetMapping
     public ResponseEntity<List<TagResponseDTO>> getAllTags() {
-        List<TagResponseDTO> tags = tagService.getAllTags().stream()
+        List<TagResponseDTO> tags = tagService.getAllTags()
+                .stream()
                 .map(tagMapper::toResponseDTO)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(tags);
