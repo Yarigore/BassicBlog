@@ -9,6 +9,7 @@ import com.dimas.BassicBlog.Mapper.CommentMapper;
 import com.dimas.BassicBlog.Service.CommentService;
 import com.dimas.BassicBlog.Service.PostService;
 import com.dimas.BassicBlog.Service.UserService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,18 +21,12 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/v1/comment")
+@AllArgsConstructor
 public class CommentController {
 
-    @Autowired
     private CommentService commentService;
-
-    @Autowired
     private UserService userService;
-
-    @Autowired
     private PostService postService;
-
-    @Autowired
     private CommentMapper commentMapper;
 
     @GetMapping("/{id}")

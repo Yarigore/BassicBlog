@@ -5,6 +5,7 @@ import com.dimas.BassicBlog.DTO.TagDTO.TagResponseDTO;
 import com.dimas.BassicBlog.Entity.Tag;
 import com.dimas.BassicBlog.Mapper.TagMapper;
 import com.dimas.BassicBlog.Service.TagService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,12 +16,10 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/v1/tags")
+@AllArgsConstructor
 public class TagController {
 
-    @Autowired
     private TagService tagService;
-
-    @Autowired
     private TagMapper tagMapper;
 
     @GetMapping

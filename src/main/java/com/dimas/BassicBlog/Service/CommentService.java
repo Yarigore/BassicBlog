@@ -17,10 +17,9 @@ import java.util.Optional;
 public class CommentService {
 
     private CommentRepository commentRepository;
-
     private PostRepository postRepository;
-
     private UserService userService;
+
 
     public Optional<List<Comment>> getComments(){
         return Optional.of(commentRepository.findAll());

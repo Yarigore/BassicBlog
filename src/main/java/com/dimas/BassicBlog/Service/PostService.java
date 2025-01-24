@@ -24,14 +24,11 @@ import java.util.Optional;
 public class PostService {
 
     private PostRepository postRepository;
-
     private UserRepository userRepository;
-
     private CategoryRepository categoryRepository;
-
     private TagRepository tagRepository;
-
     private ImgbbService imgbbService;
+
 
     public Optional<Post> getPostById(Long id) {
         return postRepository.findById(id);
@@ -56,7 +53,7 @@ public class PostService {
         post.setTags(tagRepository.findAllById(tagIds));
 
         if (file != null && !file.isEmpty()) {
-            post.setImageUrl(uploadImage(file));
+            post.setImageUrl(imgbbService.imageToString(file));
         }
 
         return Optional.of(postRepository.save(post));
@@ -65,14 +62,6 @@ public class PostService {
     public Post savePost(Post post) {
         post.setUpdatedAt(LocalDateTime.now());
         return postRepository.save(post);
-    }
-
-    public String uploadImage(MultipartFile file) throws IOException {
-        String base64Image = Base64.getEncoder().encodeToString(file.getBytes());
-        String response = imgbbService.uploadImage(base64Image);
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode jsonNode = objectMapper.readTree(response);
-        return jsonNode.get("data").get("url").asText();
     }
 
     public boolean deletePost(Long id) {

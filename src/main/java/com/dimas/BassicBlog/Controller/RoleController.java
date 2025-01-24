@@ -5,6 +5,7 @@ import com.dimas.BassicBlog.DTO.RoleDTO.RoleResponseDTO;
 import com.dimas.BassicBlog.Entity.Role;
 import com.dimas.BassicBlog.Mapper.RoleMapper;
 import com.dimas.BassicBlog.Service.RoleService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,12 +16,10 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/v1/role")
+@AllArgsConstructor
 public class RoleController {
 
-    @Autowired
     private RoleService roleService;
-
-    @Autowired
     private RoleMapper roleMapper;
 
     @GetMapping

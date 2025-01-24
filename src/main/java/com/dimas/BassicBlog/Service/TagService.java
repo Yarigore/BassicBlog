@@ -2,6 +2,7 @@ package com.dimas.BassicBlog.Service;
 
 import com.dimas.BassicBlog.Entity.Tag;
 import com.dimas.BassicBlog.Repository.TagRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,10 +10,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class TagService {
 
-    @Autowired
     private TagRepository tagRepository;
+
 
     public Optional<Tag> getTagById(Long id) {
         return tagRepository.findById(id);

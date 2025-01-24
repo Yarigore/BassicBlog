@@ -1,8 +1,10 @@
 package com.dimas.BassicBlog.Controller;
 
+import com.dimas.BassicBlog.DTO.PostDTO.PostResponseDTO;
 import com.dimas.BassicBlog.Entity.*;
+import com.dimas.BassicBlog.Mapper.PostMapper;
 import com.dimas.BassicBlog.Service.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -10,41 +12,42 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/v1/post")
+@AllArgsConstructor
 public class PostController {
 
-    @Autowired
     public PostService postService;
-    @Autowired
     private ImgbbService imgbbService;
-    @Autowired
     private UserService userService;
-    @Autowired
-    CategoryService categoryService;
-    @Autowired
-    TagService tagService;
+    private CategoryService categoryService;
+    private TagService tagService;
+    private PostMapper postMapper;
 
     @GetMapping
-    public ResponseEntity<List<Post>> getPosts() {
+    public ResponseEntity<List<PostResponseDTO>> getPosts() {
         return postService.getPosts()
-                .map(ResponseEntity::ok)
+                .map(posts -> ResponseEntity.ok(
+                        posts.stream()
+                                .map(postMapper::toResponse)
+                                .collect(Collectors.toList())
+                ))
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Post> getPostById(@PathVariable Long id) {
+    public ResponseEntity<PostResponseDTO> getPostById(@PathVariable Long id) {
         return postService.getPostById(id)
-                .map(ResponseEntity::ok)
+                .map(post -> ResponseEntity.ok(postMapper.toResponse(post)))
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Post> createPost(
+    public ResponseEntity<PostResponseDTO> createPost(
             @RequestParam("file") MultipartFile file,
             @RequestParam("title") String title,
             @RequestParam("content") String content,
@@ -54,12 +57,12 @@ public class PostController {
 
         Optional<Post> post = postService.savePost(file, title, content, authorId, categoryId, tagIds);
         return post
-                .map(ResponseEntity::ok)
+                .map(p -> ResponseEntity.ok(postMapper.toResponse(p)))
                 .orElse(ResponseEntity.badRequest().build());
     }
 
     @PatchMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Post> updatePost(
+    public ResponseEntity<PostResponseDTO> updatePost(
             @PathVariable Long id,
             @RequestParam(value = "file", required = false) MultipartFile file,
             @RequestParam(value = "title", required = false) String title,
@@ -89,7 +92,7 @@ public class PostController {
 
             try {
                 if (file != null && !file.isEmpty()) {
-                    String imageUrl = postService.uploadImage(file);
+                    String imageUrl = imgbbService.imageToString(file);
                     existingPost.setImageUrl(imageUrl);
                 }
             } catch (Exception e) {
@@ -97,18 +100,17 @@ public class PostController {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
             }
 
-            return ResponseEntity.ok(postService.savePost(existingPost));
+            return ResponseEntity.ok(postMapper.toResponse(postService.savePost(existingPost)));
         }
 
         return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping
-    public ResponseEntity<Post> deletePost(@RequestParam Long id) {
+    public ResponseEntity<Void> deletePost(@RequestParam Long id) {
         boolean isDeleted = postService.deletePost(id);
         if (isDeleted) return ResponseEntity.noContent().build();
         else return ResponseEntity.notFound().build();
-
     }
 
 }
